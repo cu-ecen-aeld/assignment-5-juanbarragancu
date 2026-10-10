@@ -1,0 +1,27 @@
+#! /bin/sh
+
+KERNEL_V="$(uname -r)"
+#location of the modules
+MODULE_DIR="/lib/modules/$KERNEL_V/extra"
+
+case "$1" in
+    start)
+    #load the listed modules
+    	cd $MODULE_DIR
+        /usr/sbin/scull_load || exit 1
+        /usr/sbin/module_load faulty || exit 1
+        modprobe hello
+        ;;
+    stop)
+    #unload the listed modules
+        cd $MODULE_DIR
+        /usr/sbin/scull_unload || exit 1
+        /usr/sbin/module_unload faulty || exit 1
+        rmmod hello || exit 1
+        ;;
+    *)    
+      echo "Usage: $0 {start|stop}"
+    exit 1
+esac
+
+exit 0
